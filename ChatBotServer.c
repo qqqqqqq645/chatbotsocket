@@ -5,8 +5,8 @@
 
 #define PORT 10000
 #define SERVERMESSAGE "Hi, I'm server\n"
-
-char rcvBuffer[100];
+#define __BUFFSIZE 100
+char rcvBuffer[__BUFFSIZE];
 
 int main(){
 	int c_socket, s_socket;
@@ -53,8 +53,13 @@ int main(){
 			memset(rcvBuffer,'\0',sizeof(rcvBuffer));
 			n = read(c_socket, rcvBuffer, sizeof(rcvBuffer));
 			printf("rcvBuffer: %s\n", rcvBuffer);
+			//클라이언트에서 보낸 종료명령 확인
 			if(strncasecmp(rcvBuffer, "quit", 4) == 0 || strncasecmp(rcvBuffer, "kill server", 11) == 0)
 				break;
+			if(strcmp(rcvBuffer,"안녕하세요.\n")==0){
+				write(c_socket,"안녕하세요. 만나서 반가워요.\n",strlen("안녕하세요 만나서 반가워요.\n")+1);
+			}
+			else
 			write(c_socket, rcvBuffer, n); //클라이언트에게 buffer의 내용을 전송함
 		}
 
