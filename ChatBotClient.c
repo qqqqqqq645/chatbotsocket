@@ -48,8 +48,10 @@ int main(){
 		//서버로 메세지 전송
 		write(c_socket, sendBuffer, strlen(sendBuffer));
 		//입력받은 메세지가 quit 이면  break
-		if(strncasecmp(sendBuffer, "quit", 4) == 0 || strncasecmp(sendBuffer, "kill server", 11) == 0)
+		if(strncasecmp(sendBuffer, "quit", 4) == 0 || strncasecmp(sendBuffer, "kill server", 11) == 0){
+			printf("프로그램 종료\n");	
 			break;
+		}
 	}
 	close(c_socket);
 	return 0;	
