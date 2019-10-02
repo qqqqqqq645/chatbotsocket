@@ -4,9 +4,10 @@
 #include <string.h>
 
 #define PORT 10000
+#define SERVERMESSAGE "Hi, I'm server\n"
 
-char buffer[100] = "Hi, I'm server.\n";
 char rcvBuffer[100];
+
 int main(){
 	int c_socket, s_socket;
 	struct sockaddr_in s_addr, c_addr;
@@ -45,7 +46,11 @@ int main(){
 		//클라이언트의 요청이 오면 허용(accept)해 주고, 해당 클라이언트와 통신할 수 있도록 클라이언트 소켓(c_socket)을 반환함.
 		printf("/client is connected\n");
 		printf("클라이언트 접속 허용\n");
-		while(1){
+		//클라이언트입장시  메세지 전송
+		write(c_socket,SERVERMESSAGE,strlen(SERVERMESSAGE));
+		while(1){	//클라이언트가 보낸 메세지 받고 출력 반복
+			
+			memset(rcvBuffer,'\0',sizeof(rcvBuffer));
 			n = read(c_socket, rcvBuffer, sizeof(rcvBuffer));
 			printf("rcvBuffer: %s\n", rcvBuffer);
 			if(strncasecmp(rcvBuffer, "quit", 4) == 0 || strncasecmp(rcvBuffer, "kill server", 11) == 0)
