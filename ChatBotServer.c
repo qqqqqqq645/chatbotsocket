@@ -2,19 +2,21 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <string.h>
+#include "ChatIndex.h"
 
 #define PORT 10000
 #define SERVERMESSAGE "Hi, I'm server\n"
 #define __BUFFSIZE 100
 char rcvBuffer[__BUFFSIZE];
-char sendBuffer[__BUFFSIZE];
+char * sendBuffer;
 
 int main(){
 	int c_socket, s_socket;
 	struct sockaddr_in s_addr, c_addr;
 	int len;
 	int n;
-
+	char *delCmd[__BUFFSIZE];
+	
 	// 1. 서버 소켓 생성
 	//서버 소켓 = 클라이언트의 접속 요청을 처리(허용)해 주기 위한 소켓
 	s_socket = socket(PF_INET, SOCK_STREAM, 0); //TCP/IP 통신을 위한 서버 소켓 생성
@@ -57,17 +59,26 @@ int main(){
 			//클라이언트에서 보낸 종료명령 확인
 			if(strncasecmp(rcvBuffer, "quit", 4) == 0 || strncasecmp(rcvBuffer, "kill server", 11) == 0)
 				break;
+				//서버 대답 확인
 			if(strcmp(rcvBuffer,"안녕하세요.\n")==0){
-				strcpy(sendBuffer,"안녕하세요. 만나서 반갑습니다.\n");
+				sendBuffer = "안녕하세요. 만나서 반갑습니다.\n";
 			}
 			else if(strcmp(rcvBuffer,"이름이 머야?\n")==0){
-				strcpy(sendBuffer,"내 이름은 XXX야.\n");
+				sendBuffer="내 이름은 XXX야.\n";
 			}
 			else if(strcmp(rcvBuffer,"몇 살이야?\n")==0){
-				strcpy(sendBuffer,"나는 XX살이야\n");
+				sendBuffer="나는 XX살이야\n";
 			}
 			else
-				strcpy(sendBuffer,rcvBuffer);
+				sendBuffer=rcvBuffer;//목록에 없으면 echo 기능수행
+
+			//클라이언트 문자열 명령 입력
+			if(strncasecmp(rcvBuffer,"strlen",6)==0){
+				sendBuffer = delCmdAndSpace(rcvBuffer,"strlen");
+				int length = strlen(sendBuffer);
+				printf("length = %d\n",length);
+				sprintf(sendBuffer,"%d\n",length);
+			}
 			n=strlen(sendBuffer);
 			write(c_socket, sendBuffer, n); //클라이언트에게 buffer의 내용을 전송함
 			printf("Server send : %s\n",sendBuffer);
