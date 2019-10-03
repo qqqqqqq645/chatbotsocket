@@ -2,7 +2,7 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <string.h>
-#include "ChatIndex.h"
+#include "ChatIndex.h" //delCmdAndSpace 정의
 
 #define PORT 10000
 #define SERVERMESSAGE "Hi, I'm server\n"
@@ -75,7 +75,7 @@ int main(){
 			//클라이언트 문자열 명령 입력
 			if(strncasecmp(rcvBuffer,"strlen",6)==0){
 				sendBuffer = delCmdAndSpace(rcvBuffer,"strlen");
-				int length = strlen(sendBuffer);
+				int length = strlen(sendBuffer)-1;//문자열끝 \n 세지않음
 				printf("length = %d\n",length);
 				sprintf(sendBuffer,"%d\n",length);
 			}
