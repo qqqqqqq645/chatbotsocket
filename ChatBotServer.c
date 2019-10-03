@@ -57,7 +57,7 @@ int main(){
 			n = read(c_socket, rcvBuffer, sizeof(rcvBuffer));
 			printf("Client message : %s\n", rcvBuffer);
 			//클라이언트에서 보낸 종료명령 확인
-			if(strncasecmp(rcvBuffer, "quit", 4) == 0 || strncasecmp(rcvBuffer, "kill server", 11) == 0)
+			if(strncmp(rcvBuffer, "quit", 4) == 0 || strncmp(rcvBuffer, "kill server", 11) == 0)
 				break;
 				//서버 대답 확인
 			if(strcmp(rcvBuffer,"안녕하세요.\n")==0){
@@ -73,11 +73,16 @@ int main(){
 				sendBuffer=rcvBuffer;//목록에 없으면 echo 기능수행
 
 			//클라이언트 문자열 명령 입력
-			if(strncasecmp(rcvBuffer,"strlen",6)==0){
+			if(strncmp(rcvBuffer,"strlen",6)==0){
 				sendBuffer = delCmdAndSpace(rcvBuffer,"strlen");
 				int length = strlen(sendBuffer)-1;//문자열끝 \n 세지않음
-				printf("length = %d\n",length);
 				sprintf(sendBuffer,"%d\n",length);
+			}
+			else if(strncmp(rcvBuffer,"strcmp",6)==0){
+					sendBuffer = delCmdAndSpace(rcvBuffer,"strcmp");
+					int result = ClientCmdCmp(sendBuffer);
+					sprintf(sendBuffer,"%d\n",result);
+					
 			}
 			n=strlen(sendBuffer);
 			write(c_socket, sendBuffer, n); //클라이언트에게 buffer의 내용을 전송함
