@@ -84,6 +84,32 @@ int main(){
 					sprintf(sendBuffer,"%d\n",result);
 					
 			}
+			else if(strncmp(rcvBuffer,"readfile",8)==0){
+				sendBuffer = delCmdAndSpace(rcvBuffer,"readfile");
+				rcvBuffer[n-1] = '\0'; //개행문자 제거
+				FILE *fp = fopen(sendBuffer,"r");
+				if(fp){
+					char reader[255];
+					if(fp){
+						while(fgets(reader,255,(FILE *)fp)){
+							printf("%s",reader);
+							sendBuffer = reader;
+						}
+					}
+				fclose(fp);
+				}
+				else
+					sendBuffer = "no file\n";
+			}
+			else if(strncmp(rcvBuffer,"exec",4)==0){
+				sendBuffer = delCmdAndSpace(rcvBuffer,"exec");
+				int chk = system(sendBuffer);
+				if(!chk)
+					sendBuffer = ("command is executed\n");
+				else
+					sendBuffer = ("command failed\n");
+
+			}
 			n=strlen(sendBuffer);
 			write(c_socket, sendBuffer, n); //클라이언트에게 buffer의 내용을 전송함
 			printf("Server send : %s\n",sendBuffer);
