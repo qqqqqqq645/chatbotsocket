@@ -89,9 +89,9 @@ int main(){
 				rcvBuffer[n-1] = '\0'; //개행문자 제거
 				FILE *fp = fopen(sendBuffer,"r");
 				if(fp){
-					char reader[255];
+					char reader[BUFSIZ];
 					if(fp){
-						while(fgets(reader,255,(FILE *)fp)){
+						while(fgets(reader,BUFSIZ,(FILE *)fp)){
 							printf("%s",reader);
 							sendBuffer = reader;
 						}
