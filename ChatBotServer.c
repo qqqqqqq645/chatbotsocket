@@ -52,7 +52,7 @@ int main(){
 		//클라이언트입장시  메세지 전송
 		write(c_socket,SERVERMESSAGE,strlen(SERVERMESSAGE));
 		while(1){	//클라이언트가 보낸 메세지 받고 출력 반복
-			
+			sendBuffer=NULL;	
 			memset(rcvBuffer,'\0',sizeof(rcvBuffer));
 			n = read(c_socket, rcvBuffer, sizeof(rcvBuffer));
 			printf("Client message : %s\n", rcvBuffer);
@@ -90,11 +90,13 @@ int main(){
 				FILE *fp = fopen(sendBuffer,"r");
 				if(fp){
 					char reader[BUFSIZ];
+					char sender[BUFSIZ];
 					if(fp){
 						while(fgets(reader,BUFSIZ,(FILE *)fp)){
 							printf("%s",reader);
-							sendBuffer = reader;
-						}
+							strcat(sender,reader);
+						} 
+						sendBuffer = sender;
 					}
 				fclose(fp);
 				}
@@ -108,10 +110,9 @@ int main(){
 					sendBuffer = ("command is executed\n");
 				else
 					sendBuffer = ("command failed\n");
-
+			
 			}
-			n=strlen(sendBuffer);
-			write(c_socket, sendBuffer, n); //클라이언트에게 buffer의 내용을 전송함
+			write(c_socket, sendBuffer, strlen(sendBuffer)); //클라이언트에게 buffer의 내용을 전송함
 			printf("Server send : %s\n",sendBuffer);
 		}
 

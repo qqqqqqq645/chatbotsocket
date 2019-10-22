@@ -1,0 +1,12 @@
+ChatBotClient
+ChatBotClient.c
+ChatBotServer
+ChatBotServer.c
+ChatBotServer.o
+ChatIndex.c
+ChatIndex.h
+ChatIndex.o
+Makefile
+README.md
+fileread.c
+list.txt
